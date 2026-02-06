@@ -1,0 +1,55 @@
+==========Module 1: Authentification=============
+Écran de Connexion :
+- Formulaire login/mot de passe
+- "Rester connecté" option
+- Lien "Créer un compte"
+- Validation des champs
+
+Gestion Comptes :
+- Création compte (nom, email, mot de passe)
+- Hashage sécurisé des mots de passe
+- Profil utilisateur basique
+
+============Module 2: Gestion des tâches (CRUD)==========
+CRUD Tâches :
+- Create : Formulaire d'ajout
+- Read : Liste avec détails
+- Update : Édition en place ou popup
+- Delete : Avec confirmation
+
+Champs d'une Tâche :
+- Titre (obligatoire, 255 caractères max)
+- Description (texte long)
+- Date création (auto)
+- Date échéance (sélecteur calendrier)
+- Priorité (Basse/Moyenne/Haute/Urgent)
+- Catégorie (Travail/Personnel/Études)
+- Statut (À faire/En cours/Terminé)
+- Utilisateur assigné (soi-même par défaut)
+
+============Module 3: Liste et recherche ==================
+Affichage Liste :
+- Vue Tableau (TableView)
+- Vue Cartes (TilePane)
+- Tri par colonnes
+- Pagination simple (optionnel)
+
+Filtres et Recherche :
+- Barre de recherche texte
+- Filtres par statut
+- Filtres par priorité
+- Filtres par catégorie
+- Filtres par date
+- Combinaison de filtres
+
+=========== Module 4: Tableau de bord ==================
+Vue d'ensemble :
+- Nombre total de tâches
+- Tâches en retard (échéance dépassée)
+- Tâches pour aujourd'hui
+- Tâches à haute priorité
+- Graphique simple (camembert des statuts)
+
+
+
+

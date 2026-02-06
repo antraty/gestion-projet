@@ -1,2 +1,2 @@
 # gestion-projet
-Platefrome de gestion de projet réalisé par ANtratia et Enzo
+Platefrome de gestion de projet réalisé par Antratia et Enzo
