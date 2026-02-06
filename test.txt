@@ -1,0 +1,63 @@
+taskmanager/
+├── pom.xml                                   # Configuration Maven
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── taskmanager/
+│   │   │           ├── Main.java                    # Point d'entrée
+│   │   │           ├── config/
+│   │   │           │   ├── DatabaseConfig.java      # Configuration DB
+│   │   │           │   └── AppConfig.java          # Configuration App
+│   │   │           ├── controllers/
+│   │   │           │   ├── AuthController.java      # Contrôleur Auth
+│   │   │           │   ├── DashboardController.java # Contrôleur Dashboard
+│   │   │           │   ├── TaskController.java      # Contrôleur Tâches
+│   │   │           │   └── MainController.java      # Contrôleur Principal
+│   │   │           ├── models/
+│   │   │           │   ├── User.java               # Modèle Utilisateur
+│   │   │           │   ├── Task.java               # Modèle Tâche
+│   │   │           │   └── Session.java            # Modèle Session
+│   │   │           ├── services/
+│   │   │           │   ├── AuthService.java        # Service Authentification
+│   │   │           │   ├── TaskService.java        # Service Tâches
+│   │   │           │   ├── DatabaseService.java    # Service Base de données
+│   │   │           │   └── ReportService.java      # Service Rapports
+│   │   │           ├── dao/
+│   │   │           │   ├── UserDAO.java            # DAO Utilisateur
+│   │   │           │   ├── TaskDAO.java            # DAO Tâche
+│   │   │           │   └── BaseDAO.java            # DAO de base
+│   │   │           ├── utils/
+│   │   │           │   ├── PasswordHasher.java     # Hashage mots de passe
+│   │   │           │   ├── Validator.java          # Validation données
+│   │   │           │   ├── DateUtils.java          # Utilitaires dates
+│   │   │           │   └── AlertUtils.java         # Utilitaires alertes
+│   │   │           └── exceptions/
+│   │   │               ├── AuthException.java      # Exception Auth
+│   │   │               └── DatabaseException.java  # Exception DB
+│   │   └── resources/
+│   │       ├── views/                              # Fichiers FXML
+│   │       │   ├── login.fxml
+│   │       │   ├── register.fxml
+│   │       │   ├── dashboard.fxml
+│   │       │   ├── task-list.fxml
+│   │       │   ├── task-form.fxml
+│   │       │   ├── profile.fxml
+│   │       │   └── main-layout.fxml
+│   │       ├── css/
+│   │       │   ├── styles.css                      # Styles principaux
+│   │       │   └── components.css                  # Styles composants
+│   │       ├── images/                             # Images
+│   │       │   ├── logo.png
+│   │       │   ├── icon-task.png
+│   │       │   └── icon-user.png
+│   │       └── config/
+│   │           └── application.properties          # Configuration
+│   └── test/                                       # Tests unitaires
+│       └── java/com/taskmanager/
+├── sql/                                            # Scripts SQL
+│   ├── schema.sql                                  # Structure DB
+│   ├── data.sql                                    # Données initiales
+│   └── migration/                                  # Migrations
+├── docs/                                           # Documentation
+└── target/                                         # Généré par Maven
