@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taskmanager.controllers.DashboardController">
+    <Label text="Total tâches:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <Label fx:id="totalTasksLabel" text="0" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Label text="Tâches en retard:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <Label fx:id="overdueLabel" text="0" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Label text="Aujourd'hui:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <Label fx:id="todayLabel" text="0" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label text="Haute priorité:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <Label fx:id="highPriorityLabel" text="0" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+</GridPane>

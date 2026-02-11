@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<VBox spacing="8" xmlns:fx="http://javafx.com/fxml/1">
+    <Label text="Profil utilisateur"/>
+    <TextField promptText="Nom"/>
+    <TextField promptText="Email" />
+    <Button text="Enregistrer"/>
+</VBox>
