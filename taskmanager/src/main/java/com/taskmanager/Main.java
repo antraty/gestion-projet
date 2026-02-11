@@ -8,12 +8,11 @@ import javafx.stage.Stage;
 
 import java.io.InputStream;
 import java.util.Objects;   
-
-public class main extends Application {
+    
+public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Load configuration and initialize DB
         AppConfig.load();
         DatabaseService.getInstance().initialize();
 
