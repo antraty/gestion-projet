@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<VBox spacing="8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taskmanager.controllers.TaskController">
+    <ToolBar>
+        <Button text="Ajouter" onAction="#onAddTask"/>
+        <Button text="Supprimer" onAction="#onDeleteTask"/>
+        <TextField fx:id="searchField" promptText="Rechercher..." onKeyReleased="#onSearch"/>
+        <DatePicker fx:id="filterDate" onAction="#onSearch"/>
+    </ToolBar>
+    <TableView fx:id="table">
+        <columns>
+            <TableColumn fx:id="titleCol" text="Titre" />
+            <TableColumn fx:id="priorityCol" text="Priorité" />
+        </columns>
+    </TableView>
+</VBox>

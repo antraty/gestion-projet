@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.*?>
+<GridPane hgap="8" vgap="8" xmlns:fx="http://javafx.com/fxml/1">
+    <Label text="Titre" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Label text="Description" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextArea GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Label text="Échéance" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <DatePicker GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Label text="Priorité" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <ComboBox editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Basse"/>
+                <String fx:value="Moyenne"/>
+                <String fx:value="Haute"/>
+                <String fx:value="Urgent"/>
+            </FXCollections>
+        </items>
+    </ComboBox>
+</GridPane>

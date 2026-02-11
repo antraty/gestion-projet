@@ -17,7 +17,6 @@ public class Main extends Application {
         DatabaseService.getInstance().initialize();
 
         FXMLLoader loader = new FXMLLoader();
-        InputStream mainFxml = Main.class.getResourceAsStream("/views/main-layout.fxml");
         loader.setLocation(Main.class.getResource("/views/main-layout.fxml"));
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/styles.css")).toExternalForm());

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<VBox spacing="8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taskmanager.controllers.AuthController">
+    <Label text="Créer un compte" style="-fx-font-size: 18px;"/>
+    <TextField promptText="Nom"/>
+    <TextField promptText="Email"/>
+    <PasswordField promptText="Mot de passe"/>
+    <PasswordField promptText="Confirmer mot de passe"/>
+    <Button text="S'inscrire"/>
+</VBox>

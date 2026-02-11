@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<VBox spacing="10" alignment="CENTER" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taskmanager.controllers.AuthController">
+    <Label text="Connexion" style="-fx-font-size: 18px;"/>
+    <TextField fx:id="emailField" promptText="Email"/>
+    <PasswordField fx:id="passwordField" promptText="Mot de passe"/>
+    <CheckBox fx:id="rememberMe" text="Rester connecté"/>
+    <Button fx:id="loginButton" text="Se connecter" />
+    <Hyperlink fx:id="registerLink" text="Créer un compte"/>
+</VBox>

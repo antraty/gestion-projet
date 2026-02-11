@@ -7,7 +7,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
-public class mainController {
+public class MainController {
     @FXML
     private BorderPane rootPane;
 
