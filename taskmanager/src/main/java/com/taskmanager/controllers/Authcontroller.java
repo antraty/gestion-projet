@@ -23,7 +23,6 @@ public class AuthController {
             try {
                 MainController main = (MainController) registerLink.getScene().lookup("#rootPane").getUserData();
             } catch (Exception ignored) {}
-            // Could call parent controller to swap view
         });
 
         loginButton.setOnAction(e -> onLogin());
@@ -36,7 +35,6 @@ public class AuthController {
         try {
             User user = authService.login(email, password);
             AlertUtils.info("Succès", "Connecté en tant que " + user.getName());
-            // TODO: switch to dashboard view
         } catch (AuthException ex) {
             AlertUtils.error("Erreur d'authentification", ex.getMessage());
         }
