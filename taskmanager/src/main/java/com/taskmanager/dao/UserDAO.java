@@ -37,5 +37,16 @@ public class UserDAO extends BaseDAO {
             throw new RuntimeException(e);
         }
     }
-
+    
+    public boolean emailExists(String email){
+        String sql = "SELECT 1 FROM users WHERE email = ?";
+        try (PreparedStatement ps = connection().prepareStatement(sql)){
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch(SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
 }

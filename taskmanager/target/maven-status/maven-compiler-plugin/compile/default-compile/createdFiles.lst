@@ -16,7 +16,9 @@ com\taskmanager\controllers\DashboardController.class
 com\taskmanager\exceptions\DatabaseException.class
 com\taskmanager\models\Task.class
 com\taskmanager\services\DatabaseService.class
+com\taskmanager\config\DatabaseConnection.class
 com\taskmanager\utils\AlertUtils.class
+MainController.class
 com\taskmanager\services\AuthService.class
 com\taskmanager\services\TaskService.class
 com\taskmanager\exceptions\AuthException.class

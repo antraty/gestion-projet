@@ -23,7 +23,6 @@ public class TaskController {
     private final TaskService taskService = TaskService.getInstance();
     private final ObservableList<Task> tasks = FXCollections.observableArrayList();
 
-    @FXML
     public void initialize() {
         titleCol.setCellValueFactory(c -> c.getValue().titleProperty());
         priorityCol.setCellValueFactory(c -> c.getValue().priorityProperty());

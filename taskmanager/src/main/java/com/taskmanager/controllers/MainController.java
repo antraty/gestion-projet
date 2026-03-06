@@ -11,7 +11,6 @@ public class MainController {
     @FXML
     private BorderPane rootPane;
 
-    @FXML
     public void initialize() {
         // Load login view by default
         try {

@@ -1,6 +1,7 @@
 package com.taskmanager;
 import com.taskmanager.config.AppConfig;
 import com.taskmanager.services.DatabaseService;
+import com.taskmanager.utils.PasswordHasher;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,7 +18,7 @@ public class Main extends Application {
         DatabaseService.getInstance().initialize();
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Main.class.getResource("/views/main-layout.fxml"));
+        loader.setLocation(Main.class.getResource("/views/login.fxml"));
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/styles.css")).toExternalForm());
 

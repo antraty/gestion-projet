@@ -21,7 +21,9 @@ public class DatabaseService {
 
     public void initialize() {
         try {
-            conn = DriverManager.getConnection(DatabaseConfig.getJdbcUrl());
+            String user = com.taskmanager.config.AppConfig.getOrDefault("db.user", "root");
+            String password = com.taskmanager.config.AppConfig.getOrDefault("db.password", "");
+            conn = DriverManager.getConnection(DatabaseConfig.getJdbcUrl(), user, password);
             // Run schema if not exists
             try (InputStream in = getClass().getResourceAsStream("/../sql/schema.sql")) {
                 // resource path adjusted; fallback to /sql/schema.sql

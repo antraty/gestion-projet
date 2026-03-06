@@ -27,6 +27,8 @@ public class AuthService {
         u.setPasswordHash(hash);
         int id = userDAO.create(u);
         u.setId(id);
+        // Stocker l'utilisateur dans la session après inscription
+        com.taskmanager.models.Session.getInstance().setCurrentUser(u);
         return u;
     }
 
@@ -34,7 +36,7 @@ public class AuthService {
         User u = userDAO.findByEmail(email);
         if (u == null) throw new AuthException("Utilisateur non trouvé");
         if (!PasswordHasher.verify(password, u.getPasswordHash())) throw new AuthException("Mot de passe incorrect");
-        // Set session
+        // Stocker l'utilisateur dans la session
         com.taskmanager.models.Session.getInstance().setCurrentUser(u);
         return u;
     }

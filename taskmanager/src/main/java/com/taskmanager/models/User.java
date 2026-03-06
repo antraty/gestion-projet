@@ -9,8 +9,10 @@ public class User {
     private final StringProperty email = new SimpleStringProperty();
     private String passwordHash;
 
+    // Constructeur vide
     public User() {}
 
+    // Constructeur avec parametres
     public User(int id, String name, String email, String passwordHash) {
         this.id = id;
         this.name.set(name);
@@ -18,6 +20,7 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    // Getters et setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
