@@ -1,0 +1,14 @@
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\controllers\DashboardController.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\controllers\LoginController.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\controllers\RegisterController.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\controllers\TaskController.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\Main.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\models\Task.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\models\TaskCategory.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\models\TaskPriority.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\models\TaskStatus.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\models\User.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\services\AuthService.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\services\DatabaseService.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\services\TaskService.java
+C:\Users\ASUS\Documents\Antratia\gestion-projet\taskmanager\src\main\java\com\taskmanager\utils\PasswordUtils.java
