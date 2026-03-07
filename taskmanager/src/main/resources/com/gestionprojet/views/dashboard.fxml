@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.gestionprojet.controllers.DashboardController"
+            stylesheets="@../styles/style.css">
+    
+    <top>
+        <VBox styleClass="header">
+            <MenuBar>
+                <Menu text="Fichier">
+                    <MenuItem text="Nouveau projet" onAction="#handleNouveauProjet"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Déconnexion" onAction="#handleDeconnexion"/>
+                </Menu>
+                <Menu text="Aide">
+                    <MenuItem text="À propos"/>
+                </Menu>
+            </MenuBar>
+            
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <padding>
+                    <Insets top="10" right="20" bottom="10" left="20"/>
+                </padding>
+                <Label fx:id="welcomeLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Projets: "/>
+                <Label fx:id="projetCountLabel" styleClass="badge"/>
+                <Label text="Tâches: "/>
+                <Label fx:id="tacheCountLabel" styleClass="badge"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <TabPane>
+            <Tab text="Tableau de bord" closable="false">
+                <VBox spacing="20">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    
+                    <Label text="Mes projets" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    <ListView fx:id="projetsListView" onMouseClicked="#handleProjetSelectionne"/>
+                    
+                    <HBox spacing="20">
+                        <VBox spacing="10" HBox.hgrow="ALWAYS">
+                            <Label text="À faire aujourd'hui" style="-fx-font-weight: bold;"/>
+                            <ListView fx:id="tachesAujourdhuiListView"/>
+                        </VBox>
+                        
+                        <VBox spacing="10" HBox.hgrow="ALWAYS">
+                            <Label text="Cette semaine" style="-fx-font-weight: bold;"/>
+                            <ListView fx:id="tachesSemaineListView"/>
+                        </VBox>
+                        
+                        <VBox spacing="10" HBox.hgrow="ALWAYS">
+                            <Label text="Plus tard" style="-fx-font-weight: bold;"/>
+                            <ListView fx:id="tachesPlusTardListView"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </Tab>
+            
+            <Tab text="Toutes les tâches" closable="false">
+                <VBox spacing="20">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+                    <Label text="Vue d'ensemble des tâches"/>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>

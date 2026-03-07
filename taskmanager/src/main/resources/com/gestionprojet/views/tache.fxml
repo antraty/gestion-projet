@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.gestionprojet.controllers.TacheController"
+            stylesheets="@../styles/style.css">
+    
+    <left>
+        <VBox spacing="20" styleClass="sidebar">
+            <padding>
+                <Insets top="20" right="10" bottom="20" left="10"/>
+            </padding>
+            
+            <Label text="Filtres" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+            
+            <Label text="Statut:"/>
+            <ComboBox fx:id="filtreStatutCombo" onAction="#appliquerFiltres"/>
+            
+            <Label text="Priorité:"/>
+            <ComboBox fx:id="filtrePrioriteCombo" onAction="#appliquerFiltres"/>
+            
+            <Label text="Date échéance:"/>
+            <DatePicker fx:id="filtreDatePicker" onAction="#appliquerFiltres"/>
+            
+            <Button text="Réinitialiser" onAction="#reinitialiserFiltres" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    
+    <center>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <TableView fx:id="tachesTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="titreColumn" text="Titre" prefWidth="200"/>
+                    <TableColumn fx:id="prioriteColumn" text="Priorité" prefWidth="100"/>
+                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                    <TableColumn fx:id="echeanceColumn" text="Échéance" prefWidth="100"/>
+                </columns>
+            </TableView>
+            
+            <TitledPane text="Nouvelle tâche" expanded="false">
+                <VBox spacing="10">
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="100"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        
+                        <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <TextField fx:id="titreField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        
+                        <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextArea fx:id="descriptionArea" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        
+                        <Label text="Priorité:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="prioriteCombo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        
+                        <Label text="Statut:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="statutCombo" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                        
+                        <Label text="Date échéance:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                        <DatePicker fx:id="dateEcheancePicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                        
+                        <Label text="Assigner à:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                        <ComboBox fx:id="assigneeCombo" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                    </GridPane>
+                    
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Ajouter" onAction="#handleAjouterTache" styleClass="primary-button"/>
+                        <Button text="Mettre à jour" onAction="#handleMettreAJour"/>
+                        <Button text="Supprimer" onAction="#handleSupprimerTache" styleClass="danger-button"/>
+                        <Button text="Effacer" onAction="#clearForm"/>
+                    </HBox>
+                </VBox>
+            </TitledPane>
+        </VBox>
+    </center>
+</BorderPane>
