@@ -10,8 +10,11 @@ public class DatabaseService {
     private DatabaseService() {
         try {
             connection = DriverManager.getConnection(DB_URL);
+            System.out.println("Connexion à la base de données établie");
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la connexion à la base de données: " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("Impossible de se connecter à la base de données", e);
         }
     }
     
@@ -28,7 +31,6 @@ public class DatabaseService {
     
     public void initializeDatabase() {
         try (Statement stmt = connection.createStatement()) {
-            // Table Utilisateurs
             String createUserTable = "CREATE TABLE IF NOT EXISTS users (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "name TEXT NOT NULL, " +
@@ -36,7 +38,6 @@ public class DatabaseService {
                     "password_hash TEXT NOT NULL" +
                     ")";
             
-            // Table Tâches
             String createTaskTable = "CREATE TABLE IF NOT EXISTS tasks (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "title TEXT NOT NULL, " +
@@ -52,8 +53,10 @@ public class DatabaseService {
             
             stmt.execute(createUserTable);
             stmt.execute(createTaskTable);
+            System.out.println("Base de données initialisée avec succès");
             
         } catch (SQLException e) {
+            System.err.println("Erreur lors de l'initialisation de la base de données: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -62,8 +65,10 @@ public class DatabaseService {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
+                System.out.println("Connexion à la base de données fermée");
             }
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la fermeture de la connexion: " + e.getMessage());
             e.printStackTrace();
         }
     }

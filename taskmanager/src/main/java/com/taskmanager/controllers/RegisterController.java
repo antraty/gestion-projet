@@ -34,7 +34,6 @@ public class RegisterController {
         String password = passwordField.getText();
         
         if (authService.register(name, email, password)) {
-            // Inscription réussie, retour à la connexion
             showSuccess("Compte créé avec succès !");
             handleBackToLogin();
         } else {
@@ -60,32 +59,47 @@ public class RegisterController {
     }
     
     private boolean validateFields() {
-        // Vérifier champs vides
-        if (nameField.getText().isEmpty() || emailField.getText().isEmpty() || 
-            passwordField.getText().isEmpty() || confirmPasswordField.getText().isEmpty()) {
-            showError("Tous les champs sont obligatoires");
+        if (nameField.getText() == null || nameField.getText().trim().isEmpty()) {
+            showError("Le nom est obligatoire");
             return false;
         }
         
-        // Valider email
-        if (!emailField.getText().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (emailField.getText() == null || emailField.getText().trim().isEmpty()) {
+            showError("L'email est obligatoire");
+            return false;
+        }
+        
+        if (!isValidEmail(emailField.getText().trim())) {
             showError("Format d'email invalide");
             return false;
         }
         
-        // Valider mot de passe (minimum 6 caractères)
+        if (passwordField.getText() == null || passwordField.getText().isEmpty()) {
+            showError("Le mot de passe est obligatoire");
+            return false;
+        }
+        
         if (passwordField.getText().length() < 6) {
             showError("Le mot de passe doit contenir au moins 6 caractères");
             return false;
         }
         
-        // Vérifier correspondance des mots de passe
+        if (confirmPasswordField.getText() == null || confirmPasswordField.getText().isEmpty()) {
+            showError("Veuillez confirmer le mot de passe");
+            return false;
+        }
+        
         if (!passwordField.getText().equals(confirmPasswordField.getText())) {
             showError("Les mots de passe ne correspondent pas");
             return false;
         }
         
         return true;
+    }
+    
+    private boolean isValidEmail(String email) {
+        String regex = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,})$";
+        return email.matches(regex);
     }
     
     private void showError(String message) {

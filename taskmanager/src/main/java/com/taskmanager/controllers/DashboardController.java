@@ -15,9 +15,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 public class DashboardController {
     
@@ -60,8 +62,8 @@ public class DashboardController {
         welcomeLabel.setText("Bienvenue, " + currentUser.getName() + " !");
         
         initializeFilters();
-        initializeTableView(); // Crée la TableView
-        initializeCardView();  // Crée la CardView
+        initializeTableView();
+        initializeCardView();
         setupViewToggle();
         
         loadTasks();
@@ -84,7 +86,6 @@ public class DashboardController {
         taskTableView = new TableView<>();
         taskTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
-        // Créer les colonnes
         TableColumn<Task, String> titleCol = new TableColumn<>("Titre");
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         titleCol.setPrefWidth(150);
@@ -183,7 +184,6 @@ public class DashboardController {
         
         taskTableView.getColumns().addAll(titleCol, descCol, dueDateCol, priorityCol, categoryCol, statusCol, actionsCol);
         
-        // Colorer les lignes selon la priorité
         taskTableView.setRowFactory(tv -> new TableRow<Task>() {
             @Override
             protected void updateItem(Task task, boolean empty) {
@@ -247,8 +247,10 @@ public class DashboardController {
     
     private void updateCardView() {
         cardPane.getChildren().clear();
-        for (Task task : tasks) {
-            cardPane.getChildren().add(createTaskCard(task));
+        if (tasks != null) {
+            for (Task task : tasks) {
+                cardPane.getChildren().add(createTaskCard(task));
+            }
         }
     }
     
@@ -259,17 +261,14 @@ public class DashboardController {
         card.setPrefHeight(200);
         card.setPadding(new Insets(10));
         
-        // Titre
         Label titleLabel = new Label(task.getTitle());
         titleLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-wrap-text: true;");
         
-        // Description
         Label descLabel = new Label(task.getDescription());
         descLabel.setWrapText(true);
         descLabel.setMaxHeight(60);
         descLabel.setStyle("-fx-text-fill: #666;");
         
-        // Informations
         GridPane infoGrid = new GridPane();
         infoGrid.setHgap(5);
         infoGrid.setVgap(5);
@@ -299,7 +298,6 @@ public class DashboardController {
         Label statusLabel = new Label(task.getStatus().getDisplayName());
         infoGrid.add(statusLabel, 1, 2);
         
-        // Boutons
         HBox buttonBox = new HBox(10);
         Button editBtn = new Button("Modifier");
         Button deleteBtn = new Button("Supprimer");
@@ -317,26 +315,42 @@ public class DashboardController {
     }
     
     public void loadTasks() {
-        tasks = FXCollections.observableArrayList(
-            taskService.getUserTasks(currentUser.getId())
-        );
-        taskTableView.setItems(tasks);
-        updateCardView();
+        try {
+            List<Task> loadedTasks = taskService.getUserTasks(currentUser.getId());
+            if (loadedTasks == null) {
+                loadedTasks = FXCollections.observableArrayList();
+            }
+            tasks = FXCollections.observableArrayList(loadedTasks);
+            taskTableView.setItems(tasks);
+            updateCardView();
+        } catch (Exception e) {
+            showError("Erreur lors du chargement des tâches: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void applyFilters() {
-        List<Task> filteredTasks = taskService.getFilteredTasks(
-            currentUser.getId(),
-            searchField.getText(),
-            statusFilter.getValue(),
-            priorityFilter.getValue(),
-            categoryFilter.getValue(),
-            dueDateFilter.getValue()
-        );
-        
-        tasks.setAll(filteredTasks);
-        updateCardView();
-        updateDashboardStats();
+        try {
+            List<Task> filteredTasks = taskService.getFilteredTasks(
+                currentUser.getId(),
+                searchField.getText() != null ? searchField.getText().trim() : "",
+                statusFilter.getValue(),
+                priorityFilter.getValue(),
+                categoryFilter.getValue(),
+                dueDateFilter.getValue()
+            );
+            
+            if (filteredTasks == null) {
+                filteredTasks = FXCollections.observableArrayList();
+            }
+            
+            tasks.setAll(filteredTasks);
+            updateCardView();
+            updateDashboardStats();
+        } catch (Exception e) {
+            showError("Erreur lors de l'application des filtres: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @FXML
@@ -362,10 +376,15 @@ public class DashboardController {
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Nouvelle tâche");
             dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(welcomeLabel.getScene().getWindow());
             
-            dialog.showAndWait();
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                controller.handleSave();
+            }
             
-        } catch (Exception e) {
+        } catch (IOException e) {
+            showError("Erreur lors de l'ouverture du formulaire: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -385,10 +404,15 @@ public class DashboardController {
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Modifier la tâche");
             dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(welcomeLabel.getScene().getWindow());
             
-            dialog.showAndWait();
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                controller.handleSave();
+            }
             
-        } catch (Exception e) {
+        } catch (IOException e) {
+            showError("Erreur lors de l'ouverture du formulaire: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -402,21 +426,33 @@ public class DashboardController {
         
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                if (taskService.deleteTask(task.getId(), currentUser.getId())) {
-                    loadTasks();
-                    updateDashboardStats();
+                try {
+                    if (taskService.deleteTask(task.getId(), currentUser.getId())) {
+                        loadTasks();
+                        updateDashboardStats();
+                    } else {
+                        showError("Erreur lors de la suppression de la tâche");
+                    }
+                } catch (Exception e) {
+                    showError("Erreur lors de la suppression: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
     }
     
     public void updateDashboardStats() {
-        totalTasksLabel.setText(String.valueOf(taskService.getTotalTasks(currentUser.getId())));
-        overdueTasksLabel.setText(String.valueOf(taskService.getOverdueTasks(currentUser.getId())));
-        todayTasksLabel.setText(String.valueOf(taskService.getTasksForToday(currentUser.getId())));
-        highPriorityLabel.setText(String.valueOf(taskService.getHighPriorityTasks(currentUser.getId())));
-        
-        updatePieChart();
+        try {
+            totalTasksLabel.setText(String.valueOf(taskService.getTotalTasks(currentUser.getId())));
+            overdueTasksLabel.setText(String.valueOf(taskService.getOverdueTasks(currentUser.getId())));
+            todayTasksLabel.setText(String.valueOf(taskService.getTasksForToday(currentUser.getId())));
+            highPriorityLabel.setText(String.valueOf(taskService.getHighPriorityTasks(currentUser.getId())));
+            
+            updatePieChart();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la mise à jour des statistiques: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     private void updatePieChart() {
@@ -436,6 +472,14 @@ public class DashboardController {
         
         statusPieChart.setData(pieChartData);
         statusPieChart.setTitle("Répartition des tâches");
+    }
+    
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText("Une erreur s'est produite");
+        alert.setContentText(message);
+        alert.showAndWait();
     }
     
     @FXML

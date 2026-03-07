@@ -48,8 +48,8 @@
         </VBox>
     </content>
     
-    <ButtonTypes>
-        <ButtonType fx:constant="OK" text="Enregistrer"/>
-        <ButtonType fx:constant="CANCEL" text="Annuler"/>
-    </ButtonTypes>
+    <buttons>
+        <Button text="Enregistrer" onAction="#handleSave" style="-fx-padding: 8 20;"/>
+        <Button text="Annuler" onAction="#handleCancel" style="-fx-padding: 8 20;"/>
+    </buttons>
 </DialogPane>

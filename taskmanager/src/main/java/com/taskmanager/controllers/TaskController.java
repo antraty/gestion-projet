@@ -72,7 +72,7 @@ public class TaskController {
     }
     
     @FXML
-    private void handleSave() {
+    public void handleSave() {
         if (!validateFields()) {
             return;
         }
@@ -125,7 +125,7 @@ public class TaskController {
     }
     
     private boolean validateFields() {
-        if (titleField.getText().isEmpty()) {
+        if (titleField.getText() == null || titleField.getText().trim().isEmpty()) {
             showError("Le titre est obligatoire");
             return false;
         }
@@ -140,8 +140,9 @@ public class TaskController {
             return false;
         }
         
-        if (dueDatePicker.getValue().isBefore(LocalDate.now())) {
-            showError("La date d'échéance ne peut pas être dans le passé");
+        LocalDate today = LocalDate.now();
+        if (dueDatePicker.getValue().isBefore(today)) {
+            showError("La date d'échéance doit être aujourd'hui ou à l'avenir");
             return false;
         }
         

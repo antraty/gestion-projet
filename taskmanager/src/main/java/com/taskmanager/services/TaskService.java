@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 public class TaskService {
     private static TaskService instance;
     private DatabaseService dbService;
@@ -24,7 +25,6 @@ public class TaskService {
         return instance;
     }
     
-    // Create
     public boolean createTask(Task task) {
         String query = "INSERT INTO tasks (title, description, creation_date, due_date, " +
                       "priority, category, status, user_id) " +
@@ -44,31 +44,31 @@ public class TaskService {
             return affectedRows > 0;
             
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la création de la tâche:");
             e.printStackTrace();
             return false;
         }
     }
     
-    // Read all tasks for user
     public List<Task> getUserTasks(int userId) {
         List<Task> tasks = new ArrayList<>();
         String query = "SELECT * FROM tasks WHERE user_id = ? ORDER BY due_date";
         
         try (PreparedStatement pstmt = dbService.getConnection().prepareStatement(query)) {
             pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                tasks.add(mapResultSetToTask(rs));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    tasks.add(mapResultSetToTask(rs));
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la récupération des tâches:");
             e.printStackTrace();
         }
         
         return tasks;
     }
     
-    // Read filtered tasks
     public List<Task> getFilteredTasks(int userId, String searchText, 
                                       TaskStatus status, TaskPriority priority,
                                       TaskCategory category, LocalDate dueDate) {
@@ -117,18 +117,19 @@ public class TaskService {
                 }
             }
             
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                tasks.add(mapResultSetToTask(rs));
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    tasks.add(mapResultSetToTask(rs));
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors du filtrage des tâches:");
             e.printStackTrace();
         }
         
         return tasks;
     }
     
-    // Update
     public boolean updateTask(Task task) {
         String query = "UPDATE tasks SET title = ?, description = ?, due_date = ?, " +
                       "priority = ?, category = ?, status = ? " +
@@ -148,12 +149,12 @@ public class TaskService {
             return affectedRows > 0;
             
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la mise à jour de la tâche:");
             e.printStackTrace();
             return false;
         }
     }
     
-    // Delete
     public boolean deleteTask(int taskId, int userId) {
         String query = "DELETE FROM tasks WHERE id = ? AND user_id = ?";
         
@@ -165,12 +166,12 @@ public class TaskService {
             return affectedRows > 0;
             
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la suppression de la tâche:");
             e.printStackTrace();
             return false;
         }
     }
     
-    // Statistiques pour le dashboard
     public int getTotalTasks(int userId) {
         return getTasksCount(userId, null, null);
     }
@@ -183,11 +184,13 @@ public class TaskService {
             pstmt.setDate(2, Date.valueOf(LocalDate.now()));
             pstmt.setString(3, TaskStatus.TERMINE.name());
             
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la récupération des tâches en retard:");
             e.printStackTrace();
         }
         return 0;
@@ -201,11 +204,13 @@ public class TaskService {
             pstmt.setDate(2, Date.valueOf(LocalDate.now()));
             pstmt.setString(3, TaskStatus.TERMINE.name());
             
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la récupération des tâches du jour:");
             e.printStackTrace();
         }
         return 0;
@@ -220,11 +225,13 @@ public class TaskService {
             pstmt.setString(3, TaskPriority.URGENT.name());
             pstmt.setString(4, TaskStatus.TERMINE.name());
             
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la récupération des tâches haute priorité:");
             e.printStackTrace();
         }
         return 0;
@@ -234,23 +241,23 @@ public class TaskService {
         List<Integer> counts = new ArrayList<>();
         String query = "SELECT status, COUNT(*) FROM tasks WHERE user_id = ? GROUP BY status";
         
-        // Initialiser avec 0 pour chaque statut
         for (int i = 0; i < TaskStatus.values().length; i++) {
             counts.add(0);
         }
         
         try (PreparedStatement pstmt = dbService.getConnection().prepareStatement(query)) {
             pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            
-            while (rs.next()) {
-                String statusStr = rs.getString(1);
-                int count = rs.getInt(2);
-                
-                TaskStatus status = TaskStatus.valueOf(statusStr);
-                counts.set(status.ordinal(), count);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    String statusStr = rs.getString(1);
+                    int count = rs.getInt(2);
+                    
+                    TaskStatus status = TaskStatus.valueOf(statusStr);
+                    counts.set(status.ordinal(), count);
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la récupération du décompte par statut:");
             e.printStackTrace();
         }
         
@@ -284,11 +291,13 @@ public class TaskService {
                 }
             }
             
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors du décompte des tâches:");
             e.printStackTrace();
         }
         
@@ -300,7 +309,11 @@ public class TaskService {
         task.setId(rs.getInt("id"));
         task.setTitle(rs.getString("title"));
         task.setDescription(rs.getString("description"));
-        task.setCreationDate(rs.getTimestamp("creation_date").toLocalDateTime());
+        
+        Timestamp creationTimestamp = rs.getTimestamp("creation_date");
+        if (creationTimestamp != null) {
+            task.setCreationDate(creationTimestamp.toLocalDateTime());
+        }
         
         Date dueDate = rs.getDate("due_date");
         if (dueDate != null) {

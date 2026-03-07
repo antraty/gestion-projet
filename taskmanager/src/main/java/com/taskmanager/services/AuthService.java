@@ -11,6 +11,9 @@ public class AuthService {
     
     private AuthService() {
         dbService = DatabaseService.getInstance();
+        if (dbService.getConnection() == null) {
+            throw new RuntimeException("Connexion à la base de données impossible");
+        }
     }
     
     public static AuthService getInstance() {
@@ -25,30 +28,29 @@ public class AuthService {
         
         try (PreparedStatement pstmt = dbService.getConnection().prepareStatement(query)) {
             pstmt.setString(1, email);
-            ResultSet rs = pstmt.executeQuery();
-            
-            if (rs.next()) {
-                String hashedPassword = rs.getString("password_hash");
-                if (PasswordUtils.checkPassword(password, hashedPassword)) {
-                    currentUser = new User();
-                    currentUser.setId(rs.getInt("id"));
-                    currentUser.setName(rs.getString("name"));
-                    currentUser.setEmail(rs.getString("email"));
-                    currentUser.setPasswordHash(hashedPassword);
-                    
-                    System.out.println("Utilisateur connecté: " + currentUser.getName());
-                    return true;
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String hashedPassword = rs.getString("password_hash");
+                    if (PasswordUtils.checkPassword(password, hashedPassword)) {
+                        currentUser = new User();
+                        currentUser.setId(rs.getInt("id"));
+                        currentUser.setName(rs.getString("name"));
+                        currentUser.setEmail(rs.getString("email"));
+                        currentUser.setPasswordHash(hashedPassword);
+                        
+                        System.out.println("Utilisateur connecté: " + currentUser.getName());
+                        return true;
+                    }
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erreur SQL lors de la connexion:");
+            System.err.println("Erreur SQL lors de la connexion: " + e.getMessage());
             e.printStackTrace();
         }
         return false;
     }
     
     public boolean register(String name, String email, String password) {
-        // Vérifier si l'email existe déjà
         if (isEmailExists(email)) {
             return false;
         }
@@ -65,7 +67,7 @@ public class AuthService {
             return affectedRows > 0;
             
         } catch (SQLException e) {
-            System.err.println("Erreur SQL lors de l'inscription:");
+            System.err.println("Erreur SQL lors de l'inscription: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -76,12 +78,13 @@ public class AuthService {
         
         try (PreparedStatement pstmt = dbService.getConnection().prepareStatement(query)) {
             pstmt.setString(1, email);
-            ResultSet rs = pstmt.executeQuery();
-            
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la vérification d'email: " + e.getMessage());
             e.printStackTrace();
         }
         return false;

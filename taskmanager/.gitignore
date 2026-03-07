@@ -1,0 +1,13 @@
+# Dossier target (Maven, Gradle, etc.)
+target/
+**/target/
+*/target/*
+
+# Fichiers de base de données SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Fichiers de base de données spécifiques
+taskmanager.db
+**/*.db
