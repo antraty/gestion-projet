@@ -7,6 +7,7 @@ import com.gestionprojet.models.Projet;
 import com.gestionprojet.models.Tache;
 import com.gestionprojet.utils.SessionManager;
 import com.gestionprojet.utils.DateUtils;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +16,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.cell.PropertyValueFactory;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -29,6 +33,13 @@ public class DashboardController {
     @FXML private Label projetCountLabel;
     @FXML private Label tacheCountLabel;
 
+    // TableView et colonnes pour l'onglet "Toutes les tâches"
+    @FXML private TableView<Tache> toutesTachesTableView;
+    @FXML private TableColumn<Tache, String> titreColumnToutesTaches;
+    @FXML private TableColumn<Tache, String> prioriteColumnToutesTaches;
+    @FXML private TableColumn<Tache, String> statutColumnToutesTaches;
+    @FXML private TableColumn<Tache, LocalDate> echeanceColumnToutesTaches;
+
     private ProjetDAO projetDAO = new ProjetDAO();
     private TacheDAO tacheDAO = new TacheDAO();
 
@@ -37,6 +48,7 @@ public class DashboardController {
         if (SessionManager.getInstance().estConnecte()) {
             welcomeLabel.setText("Bienvenue, " + SessionManager.getInstance().getUtilisateurConnecte().getNom());
             chargerDonnees();
+            chargerToutesLesTachesAttribuees(); // Charger les tâches attribuées pour l'onglet "Toutes les tâches"
         }
     }
 
@@ -84,6 +96,23 @@ public class DashboardController {
         tachesPlusTardListView.getItems().setAll(tachesPlusTard);
 
         tacheCountLabel.setText(String.valueOf(toutesTaches.size()));
+    }
+
+    private void chargerToutesLesTachesAttribuees() {
+        int utilisateurId = SessionManager.getInstance().getUtilisateurConnecte().getId();
+        
+        // Récupérer les tâches assignées à l'utilisateur via la DAO
+        List<Tache> tachesAttribuees = tacheDAO.getByAssignee(utilisateurId);
+        
+        toutesTachesTableView.setItems(FXCollections.observableArrayList(tachesAttribuees));
+        
+        // Configurer les colonnes
+        titreColumnToutesTaches.setCellValueFactory(new PropertyValueFactory<>("titre"));
+        prioriteColumnToutesTaches.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getPriorite().getLibelle()));
+        statutColumnToutesTaches.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getStatut().getLibelle()));
+        echeanceColumnToutesTaches.setCellValueFactory(new PropertyValueFactory<>("dateEcheance"));
     }
 
     @FXML
