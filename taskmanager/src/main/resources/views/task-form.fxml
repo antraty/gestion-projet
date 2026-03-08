@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.*?>
-<GridPane hgap="8" vgap="8" xmlns:fx="http://javafx.com/fxml/1">
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.scene.layout.HBox?>
+
+<GridPane hgap="8" vgap="8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taskmanager.controllers.TaskFormController">
     <Label text="Titre" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-    <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <TextField fx:id="titleField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
     <Label text="Description" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-    <TextArea GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <TextArea fx:id="descriptionField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
     <Label text="Échéance" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-    <DatePicker GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <DatePicker fx:id="dueDatePicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
     <Label text="Priorité" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-    <ComboBox editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1">
+    <ComboBox fx:id="priorityCombo" editable="false" GridPane.rowIndex="3" GridPane.columnIndex="1">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="Basse"/>
@@ -19,4 +26,29 @@
             </FXCollections>
         </items>
     </ComboBox>
+    <Label text="Catégorie" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="categoryCombo" GridPane.rowIndex="4" GridPane.columnIndex="1">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Travail"/>
+                <String fx:value="Personnel"/>
+                <String fx:value="Études"/>
+            </FXCollections>
+        </items>
+    </ComboBox>
+
+    <Label text="Statut" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="statusCombo" GridPane.rowIndex="5" GridPane.columnIndex="1">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="À faire"/>
+                <String fx:value="En cours"/>
+                <String fx:value="Terminé"/>
+            </FXCollections>
+        </items>
+    </ComboBox>
+    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="6" GridPane.columnIndex="1">
+        <Button text="Annuler" onAction="#onCancel" style="-fx-background-color: #f44336; -fx-text-fill: white;" />
+        <Button text="Valider" onAction="#onValidate" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" />
+    </HBox>
 </GridPane>

@@ -1,12 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <VBox spacing="8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.taskmanager.controllers.TaskController">
     <ToolBar>
         <Button text="Ajouter" onAction="#onAddTask"/>
+        <Button text="Modifier" onAction="#onEditTask"/>
         <Button text="Supprimer" onAction="#onDeleteTask"/>
+        <Button text="Réinitialiser les filtres" onAction="#onResetFilters"/>
         <TextField fx:id="searchField" promptText="Rechercher..." onKeyReleased="#onSearch"/>
         <DatePicker fx:id="filterDate" onAction="#onSearch"/>
+        <ComboBox fx:id="priorityFilterCombo" promptText="Filtrer par priorité" onAction="#onSearch">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Basse"/>
+                    <String fx:value="Moyenne"/>
+                    <String fx:value="Haute"/>
+                    <String fx:value="Urgent"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+        <ComboBox fx:id="categoryFilterCombo" promptText="Filtrer par catégorie" onAction="#onSearch">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Travail"/>
+                    <String fx:value="Personnel"/>
+                    <String fx:value="Études"/>
+                </FXCollections>
+            </items>
+            </ComboBox>
+            <ComboBox fx:id="statusFilterCombo" promptText="Filtrer par statut" onAction="#onSearch">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="À faire"/>
+                        <String fx:value="En cours"/>
+                        <String fx:value="Terminé"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
     </ToolBar>
     <TableView fx:id="table">
         <columns>

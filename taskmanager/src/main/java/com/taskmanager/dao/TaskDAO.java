@@ -84,23 +84,48 @@ public class TaskDAO extends BaseDAO {
         }
     }
 
-    public List<Task> search(String q, LocalDate date) {
-        String sql = "SELECT * FROM tasks WHERE (title LIKE ? OR description LIKE ?) "
-                   + (date != null ? "AND due_date = ? " : "") + "ORDER BY created_at DESC";
-        List<Task> list = new ArrayList<>();
-        try (PreparedStatement ps = connection().prepareStatement(sql)) {
-            ps.setString(1, "%" + (q == null ? "" : q) + "%");
-            ps.setString(2, "%" + (q == null ? "" : q) + "%");
-            if (date != null) ps.setString(3, date.toString());
+    // TaskDAO.java
+    public List<Task> search(String q, LocalDate date, String priority, String category, String status) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM tasks WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (q != null && !q.isEmpty()) {
+            sql.append(" AND (title LIKE ? OR description LIKE ?)");
+            params.add("%" + q + "%");
+            params.add("%" + q + "%");
+        }
+        if (date != null) {
+            sql.append(" AND due_date = ?");
+            params.add(date.toString());
+        }
+        if (priority != null && !priority.isEmpty()) {
+            sql.append(" AND priority = ?");
+            params.add(priority);
+        }
+        if (category != null && !category.isEmpty()) {
+            sql.append(" AND category = ?");
+            params.add(category);
+        }
+        if (status != null && !status.isEmpty()) {
+            sql.append(" AND status = ?");
+            params.add(status);
+        }
+        sql.append(" ORDER BY created_at DESC");
+
+        try (PreparedStatement ps = connection().prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            List<Task> list = new ArrayList<>();
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(mapRow(rs));
                 }
             }
+            return list;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return list;
     }
 
     private Task mapRow(ResultSet rs) throws SQLException {
@@ -128,7 +153,7 @@ public class TaskDAO extends BaseDAO {
     }
 
     public int countOverdue() {
-        String sql = "SELECT COUNT(*) FROM tasks WHERE due_date IS NOT NULL AND due_date < date('now') AND status != 'Terminé'";
+        String sql = "SELECT COUNT(*) FROM tasks WHERE due_date < CURDATE() AND status != 'Terminé'";
         try (Statement st = connection().createStatement(); ResultSet rs = st.executeQuery(sql)) {
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) {}
@@ -136,7 +161,7 @@ public class TaskDAO extends BaseDAO {
     }
 
     public int countForToday() {
-        String sql = "SELECT COUNT(*) FROM tasks WHERE due_date = date('now')";
+        String sql = "SELECT COUNT(*) FROM tasks WHERE due_date = CURDATE()";
         try (Statement st = connection().createStatement(); ResultSet rs = st.executeQuery(sql)) {
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) {}

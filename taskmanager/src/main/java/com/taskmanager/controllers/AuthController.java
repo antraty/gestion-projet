@@ -64,7 +64,7 @@ public class AuthController {
             AlertUtils.info("Succès", "Connecté en tant que " + user.getName());
             
             // Navigation vers le dashboard
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/dashboard.fxml"));
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/main-layout.fxml"));
             javafx.scene.Parent root = loader.load();
             javafx.stage.Stage stage = (javafx.stage.Stage) loginButton.getScene().getWindow();
             stage.setScene(new javafx.scene.Scene(root));

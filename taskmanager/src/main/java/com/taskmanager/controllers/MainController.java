@@ -2,27 +2,44 @@ package com.taskmanager.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
-
+import javafx.scene.Parent;
+import javafx.scene.layout.StackPane;
 import java.io.IOException;
 
 public class MainController {
-    @FXML
-    private BorderPane rootPane;
 
+    @FXML 
+    private StackPane contentPane;
+
+    @FXML
     public void initialize() {
-        // Load login view by default
-        try {
-            setCenter("/views/login.fxml");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Charge le dashboard par défaut au démarrage
+        showDashboard();
     }
 
-    public void setCenter(String fxmlPath) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-        Node node = loader.load();
-        rootPane.setCenter(node);
+    @FXML
+    private void showDashboard() {
+        loadView("/views/dashboard.fxml");
+    }
+
+    @FXML
+    private void showTasks() {
+        loadView("/views/task-list.fxml");
+    }
+
+    // La méthode magique pour la fluidité
+    private void loadView(String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent view = loader.load();
+            
+            // On remplace le contenu du StackPane
+            // setAll() supprime l'ancienne vue et met la nouvelle proprement
+            contentPane.getChildren().setAll(view);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Erreur de chargement : " + fxmlPath);
+        }
     }
 }

@@ -22,4 +22,5 @@ D:\gestion-projet\taskmanager\src\main\java\com\taskmanager\utils\AlertUtils.jav
 D:\gestion-projet\taskmanager\src\main\java\com\taskmanager\utils\Validator.java
 D:\gestion-projet\taskmanager\src\main\java\com\taskmanager\services\AuthService.java
 D:\gestion-projet\taskmanager\src\main\java\com\taskmanager\utils\PasswordHasher.java
+D:\gestion-projet\taskmanager\src\main\java\com\taskmanager\controllers\TaskFormController.java
 D:\gestion-projet\taskmanager\src\main\java\com\taskmanager\dao\UserDAO.java
