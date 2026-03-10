@@ -83,4 +83,10 @@ public class Tache {
     public void addSousTache(SousTache sousTache) {
         sousTaches.add(sousTache);
     }
+
+    @Override
+    public String toString() {
+    return titre + " (" + priorite.getLibelle() + ")";
+    }
+
 }

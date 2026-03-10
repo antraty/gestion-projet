@@ -33,4 +33,10 @@ public class Utilisateur {
     
     public LocalDateTime getDateCreation() { return dateCreation; }
     public void setDateCreation(LocalDateTime dateCreation) { this.dateCreation = dateCreation; }
+
+        @Override
+    public String toString() {
+    return nom + " (" + email + ")";
+    }
+
 }

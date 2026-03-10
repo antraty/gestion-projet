@@ -1,4 +1,5 @@
 com\gestionprojet\controllers\TacheController$1.class
+com\gestionprojet\utils\PasswordUtils.class
 com\gestionprojet\controllers\TacheController.class
 com\gestionprojet\models\Priorite.class
 com\gestionprojet\models\Tache.class

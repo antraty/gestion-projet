@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gestionprojet.utils.DateUtils;
+
 public class Projet {
     private int id;
     private String nom;
@@ -52,4 +54,9 @@ public class Projet {
     public void addTache(Tache tache) {
         taches.add(tache);
     }
+    @Override
+    public String toString() {
+    return nom + (dateEcheance != null ? " (Échéance: " + DateUtils.formatDate(dateEcheance) + ")" : "");
+    }
+
 }
