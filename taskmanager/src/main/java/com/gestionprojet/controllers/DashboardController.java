@@ -7,17 +7,17 @@ import com.gestionprojet.models.Projet;
 import com.gestionprojet.models.Tache;
 import com.gestionprojet.utils.SessionManager;
 import com.gestionprojet.utils.DateUtils;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -33,12 +33,12 @@ public class DashboardController {
     @FXML private Label projetCountLabel;
     @FXML private Label tacheCountLabel;
 
-
-    @FXML private TableView<Tache> toutesTachesTableView;
-    @FXML private TableColumn<Tache, String> titreColumnToutesTaches;
-    @FXML private TableColumn<Tache, String> prioriteColumnToutesTaches;
-    @FXML private TableColumn<Tache, String> statutColumnToutesTaches;
-    @FXML private TableColumn<Tache, LocalDate> echeanceColumnToutesTaches;
+    @FXML private TableView<TacheDAO.TacheAvecProjet> toutesTachesTableView;
+    @FXML private TableColumn<TacheDAO.TacheAvecProjet, String> titreColumnToutesTaches;
+    @FXML private TableColumn<TacheDAO.TacheAvecProjet, String> projetColumnToutesTaches;
+    @FXML private TableColumn<TacheDAO.TacheAvecProjet, String> prioriteColumnToutesTaches;
+    @FXML private TableColumn<TacheDAO.TacheAvecProjet, String> statutColumnToutesTaches;
+    @FXML private TableColumn<TacheDAO.TacheAvecProjet, LocalDate> echeanceColumnToutesTaches;
 
     private ProjetDAO projetDAO = new ProjetDAO();
     private TacheDAO tacheDAO = new TacheDAO();
@@ -76,6 +76,80 @@ public class DashboardController {
 
         // Charger les tâches par catégorie
         chargerTachesParCategorie(utilisateurId);
+        
+        // Configurer l'affichage des tâches avec double-clic
+        configurerAffichageTaches();
+    }
+
+    private void configurerAffichageTaches() {
+        // Configuration pour tachesAujourdhuiListView
+        tachesAujourdhuiListView.setCellFactory(lv -> new ListCell<Tache>() {
+            @Override
+            protected void updateItem(Tache tache, boolean empty) {
+                super.updateItem(tache, empty);
+                if (empty || tache == null) {
+                    setText(null);
+                } else {
+                    setText(tache.getTitre() + " (" + tache.getPriorite().getLibelle() + ")");
+                }
+            }
+        });
+        
+        // Double-clic sur une tâche du jour
+        tachesAujourdhuiListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Tache tache = tachesAujourdhuiListView.getSelectionModel().getSelectedItem();
+                if (tache != null) {
+                    afficherDetailsTache(tache);
+                }
+            }
+        });
+
+        // Configuration pour tachesSemaineListView
+        tachesSemaineListView.setCellFactory(lv -> new ListCell<Tache>() {
+            @Override
+            protected void updateItem(Tache tache, boolean empty) {
+                super.updateItem(tache, empty);
+                if (empty || tache == null) {
+                    setText(null);
+                } else {
+                    setText(tache.getTitre() + " (" + tache.getPriorite().getLibelle() + ")");
+                }
+            }
+        });
+        
+        // Double-clic sur une tâche de la semaine
+        tachesSemaineListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Tache tache = tachesSemaineListView.getSelectionModel().getSelectedItem();
+                if (tache != null) {
+                    afficherDetailsTache(tache);
+                }
+            }
+        });
+
+        // Configuration pour tachesPlusTardListView
+        tachesPlusTardListView.setCellFactory(lv -> new ListCell<Tache>() {
+            @Override
+            protected void updateItem(Tache tache, boolean empty) {
+                super.updateItem(tache, empty);
+                if (empty || tache == null) {
+                    setText(null);
+                } else {
+                    setText(tache.getTitre() + " (" + tache.getPriorite().getLibelle() + ")");
+                }
+            }
+        });
+        
+        // Double-clic sur une tâche plus tard
+        tachesPlusTardListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Tache tache = tachesPlusTardListView.getSelectionModel().getSelectedItem();
+                if (tache != null) {
+                    afficherDetailsTache(tache);
+                }
+            }
+        });
     }
 
     private void chargerTachesParCategorie(int utilisateurId) {
@@ -101,19 +175,87 @@ public class DashboardController {
     private void chargerToutesLesTachesAttribuees() {
         int utilisateurId = SessionManager.getInstance().getUtilisateurConnecte().getId();
         
-        // Récupérer les tâches assignées à l'utilisateur via la DAO
-        List<Tache> tachesAttribuees = tacheDAO.getByAssignee(utilisateurId);
+        // Récupérer les tâches avec le nom du projet
+        List<TacheDAO.TacheAvecProjet> tachesAttribuees = tacheDAO.getTachesAvecProjetByAssignee(utilisateurId);
         
         toutesTachesTableView.setItems(FXCollections.observableArrayList(tachesAttribuees));
         
         // Configurer les colonnes
+        titreColumnToutesTaches.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getTache().getTitre()));
         
-        titreColumnToutesTaches.setCellValueFactory(new PropertyValueFactory<>("titre"));
+        projetColumnToutesTaches.setCellValueFactory(cellData -> 
+            new SimpleStringProperty(cellData.getValue().getNomProjet()));
+        
         prioriteColumnToutesTaches.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getPriorite().getLibelle()));
+            new SimpleStringProperty(cellData.getValue().getTache().getPriorite().getLibelle()));
+        
         statutColumnToutesTaches.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getStatut().getLibelle()));
-        echeanceColumnToutesTaches.setCellValueFactory(new PropertyValueFactory<>("dateEcheance"));
+            new SimpleStringProperty(cellData.getValue().getTache().getStatut().getLibelle()));
+        
+        echeanceColumnToutesTaches.setCellValueFactory(cellData -> 
+            new SimpleObjectProperty<>(cellData.getValue().getTache().getDateEcheance()));
+        
+        // Style pour les priorités
+        prioriteColumnToutesTaches.setCellFactory(column -> new TableCell<TacheDAO.TacheAvecProjet, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    TacheDAO.TacheAvecProjet tacheAvecProjet = getTableView().getItems().get(getIndex());
+                    if (tacheAvecProjet != null) {
+                        switch (tacheAvecProjet.getTache().getPriorite()) {
+                            case URGENTE:
+                                setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                                break;
+                            case HAUTE:
+                                setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+                                break;
+                            case MOYENNE:
+                                setStyle("-fx-text-fill: blue;");
+                                break;
+                            default:
+                                setStyle("-fx-text-fill: green;");
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Ajouter un double-clic pour voir les détails de la tâche
+        toutesTachesTableView.setRowFactory(tv -> {
+            TableRow<TacheDAO.TacheAvecProjet> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    TacheDAO.TacheAvecProjet tacheAvecProjet = row.getItem();
+                    afficherDetailsTache(tacheAvecProjet.getTache());
+                }
+            });
+            return row;
+        });
+    }
+
+    private void afficherDetailsTache(Tache tache) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/gestionprojet/views/detailsTache.fxml"));
+            Parent root = loader.load();
+            
+            DetailsTacheController controller = loader.getController();
+            controller.setTache(tache);
+            
+            Stage stage = new Stage();
+            stage.setTitle("Détails de la tâche: " + tache.getTitre());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir les détails de la tâche");
+        }
     }
 
     @FXML
@@ -158,6 +300,7 @@ public class DashboardController {
                 
                 // Rafraîchir les données
                 chargerDonnees();
+                chargerToutesLesTachesAttribuees();
             } catch (IOException e) {
                 e.printStackTrace();
                 showAlert("Erreur", "Impossible d'ouvrir la fenêtre des tâches");

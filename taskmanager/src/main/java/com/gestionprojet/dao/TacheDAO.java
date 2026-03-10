@@ -3,11 +3,24 @@ package com.gestionprojet.dao;
 import com.gestionprojet.models.Priorite;
 import com.gestionprojet.models.Tache;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TacheDAO {
+    
+    // Classe interne pour les tâches avec projet
+    public static class TacheAvecProjet {
+        private Tache tache;
+        private String nomProjet;
+        
+        public TacheAvecProjet(Tache tache, String nomProjet) {
+            this.tache = tache;
+            this.nomProjet = nomProjet;
+        }
+        
+        public Tache getTache() { return tache; }
+        public String getNomProjet() { return nomProjet; }
+    }
     
     public boolean creer(Tache tache) {
         String query = "INSERT INTO taches (titre, description, priorite, statut, date_echeance, projet_id, assignee_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -68,6 +81,33 @@ public class TacheDAO {
             e.printStackTrace();
         }
         return taches;
+    }
+    
+    public List<TacheAvecProjet> getTachesAvecProjetByAssignee(int assigneeId) {
+        List<TacheAvecProjet> resultats = new ArrayList<>();
+        String query = """
+            SELECT t.*, p.nom as nom_projet 
+            FROM taches t 
+            JOIN projets p ON t.projet_id = p.id 
+            WHERE t.assignee_id = ? 
+            ORDER BY t.date_echeance ASC
+            """;
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, assigneeId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Tache tache = mapResultSetToTache(rs);
+                String nomProjet = rs.getString("nom_projet");
+                resultats.add(new TacheAvecProjet(tache, nomProjet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultats;
     }
 
     public List<Tache> getTachesPourAujourdhui(int assigneeId) {
@@ -155,5 +195,4 @@ public class TacheDAO {
         tache.setAssigneeId(rs.getInt("assignee_id"));
         return tache;
     }
-    
 }

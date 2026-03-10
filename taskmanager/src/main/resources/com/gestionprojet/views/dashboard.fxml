@@ -66,23 +66,24 @@
             </Tab>
             
             <Tab text="Toutes les tâches" closable="false">
-    <VBox spacing="20">
-        <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
-        </padding>
+                <VBox spacing="20">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
 
-        <Label text="Toutes les tâches assignées à moi" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
-        
-        <TableView fx:id="toutesTachesTableView" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn text="Titre" fx:id="titreColumnToutesTaches" prefWidth="200"/>
-                <TableColumn text="Priorité" fx:id="prioriteColumnToutesTaches" prefWidth="100"/>
-                <TableColumn text="Statut" fx:id="statutColumnToutesTaches" prefWidth="100"/>
-                <TableColumn text="Échéance" fx:id="echeanceColumnToutesTaches" prefWidth="100"/>
-            </columns>
-        </TableView>
-    </VBox>
-</Tab>
+                    <Label text="Toutes les tâches assignées à moi" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    
+                    <TableView fx:id="toutesTachesTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn text="Titre" fx:id="titreColumnToutesTaches" prefWidth="150"/>
+                            <TableColumn text="Projet" fx:id="projetColumnToutesTaches" prefWidth="150"/>
+                            <TableColumn text="Priorité" fx:id="prioriteColumnToutesTaches" prefWidth="100"/>
+                            <TableColumn text="Statut" fx:id="statutColumnToutesTaches" prefWidth="100"/>
+                            <TableColumn text="Échéance" fx:id="echeanceColumnToutesTaches" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
         </TabPane>
     </center>
 </BorderPane>

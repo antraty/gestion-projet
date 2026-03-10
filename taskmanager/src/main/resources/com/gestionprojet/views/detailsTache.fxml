@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.gestionprojet.controllers.DetailsTacheController"
+            fitToWidth="true"
+            stylesheets="@../styles/style.css">
+    
+    <VBox spacing="20">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        
+        <Label fx:id="titreLabel" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        
+        <TitledPane text="Description" expanded="true">
+            <VBox spacing="10">
+                <Label fx:id="descriptionLabel" wrapText="true"/>
+            </VBox>
+        </TitledPane>
+        
+        <TitledPane text="Informations" expanded="true">
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                
+                <Label text="Projet:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="projetLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                
+                <Label text="Priorité:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="prioriteLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                
+                <Label text="Statut:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="statutLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                
+                <Label text="Échéance:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="echeanceLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                
+                <Label text="Assigné à:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="assigneeLabel" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                
+                <Label text="Date création:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <Label fx:id="dateCreationLabel" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            </GridPane>
+        </TitledPane>
+        
+        <TitledPane text="Sous-tâches" expanded="true">
+            <VBox spacing="10">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <ProgressBar fx:id="progressionBar" prefWidth="200"/>
+                    <Label fx:id="progressionLabel"/>
+                </HBox>
+                <Separator/>
+                <VBox fx:id="sousTachesContainer" spacing="5"/>
+            </VBox>
+        </TitledPane>
+        
+        <HBox alignment="CENTER_RIGHT">
+            <Button fx:id="fermerButton" text="Fermer" onAction="#handleFermer" styleClass="primary-button"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

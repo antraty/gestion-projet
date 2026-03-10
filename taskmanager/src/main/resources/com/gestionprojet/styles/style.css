@@ -1,23 +1,32 @@
 .root {
     -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f2f4f7; /* Couleur de fond douce */
 }
 
 .header {
-    -fx-background-color: #f4f4f4;
+    -fx-background-color: #ffffff;
     -fx-border-color: #ddd;
     -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2); /* Ombre douce */
 }
 
 .sidebar {
-    -fx-background-color: #f8f9fa;
+    -fx-background-color: #ffffff;
     -fx-border-color: #dee2e6;
     -fx-border-width: 0 1 0 0;
     -fx-min-width: 200px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 6, 0, 0, 2);
 }
 
 .primary-button {
     -fx-background-color: #007bff;
     -fx-text-fill: white;
+    -fx-border-radius: 4;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 2); /* Ombre légère */
+    -fx-transition: -fx-background-color 0.3s ease;
 }
 
 .primary-button:hover {
@@ -27,6 +36,11 @@
 .danger-button {
     -fx-background-color: #dc3545;
     -fx-text-fill: white;
+    -fx-border-radius: 4;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 2);
+    -fx-transition: -fx-background-color 0.3s ease;
 }
 
 .danger-button:hover {
@@ -37,6 +51,7 @@
     -fx-background-color: transparent;
     -fx-text-fill: #007bff;
     -fx-underline: true;
+    -fx-cursor: hand;
 }
 
 .link-button:hover {
@@ -46,28 +61,27 @@
 .badge {
     -fx-background-color: #007bff;
     -fx-text-fill: white;
-    -fx-padding: 2 8 2 8;
-    -fx-background-radius: 10;
+    -fx-padding: 4 10 4 10;
+    -fx-background-radius: 12;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 1);
 }
 
-.table-view {
+.TableView, .list-view {
     -fx-border-color: #dee2e6;
-    -fx-border-radius: 4;
-}
-
-.table-view .column-header {
-    -fx-background-color: #f8f9fa;
-    -fx-border-color: #dee2e6;
-}
-
-.list-view {
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 4;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0, 0, 4);
 }
 
 .text-field, .text-area, .combo-box, .date-picker {
     -fx-border-color: #ced4da;
-    -fx-border-radius: 4;
+    -fx-border-radius: 6; /* Angles arrondis */
+    -fx-background-radius: 6;
+    -fx-padding: 8;
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 2, 0, 0, 1);
 }
 
 .text-field:focused, .text-area:focused, .combo-box:focused, .date-picker:focused {
@@ -77,6 +91,7 @@
 
 .tab-pane {
     -fx-tab-min-width: 120;
+    -fx-background-color: transparent;
 }
 
 .tab {
@@ -91,16 +106,33 @@
 }
 
 .menu-bar {
-    -fx-background-color: #f8f9fa;
+    -fx-background-color: #ffffff;
     -fx-border-color: #dee2e6;
     -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
 }
 
 .menu-item {
-    -fx-padding: 6 20 6 20;
+    -fx-padding: 8 20 8 20;
 }
 
 .scroll-pane {
     -fx-background-color: transparent;
 }
 
+.Label {
+    -fx-text-fill: #333; 
+}
+
+.Label[styleClass~="badge"] {
+    -fx-font-size: 12px; 
+}
+
+.TitledPane {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 6;
+    -fx-padding: 10;
+    -fx-background-radius: 6;
+    -fx-background-color: #f9f9f9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 4, 0, 0, 1);
+}
