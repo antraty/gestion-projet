@@ -107,6 +107,7 @@ public class DashboardController {
         toutesTachesTableView.setItems(FXCollections.observableArrayList(tachesAttribuees));
         
         // Configurer les colonnes
+        
         titreColumnToutesTaches.setCellValueFactory(new PropertyValueFactory<>("titre"));
         prioriteColumnToutesTaches.setCellValueFactory(cellData -> 
             new SimpleStringProperty(cellData.getValue().getPriorite().getLibelle()));

@@ -14,7 +14,7 @@ public class GestionProjetApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         primaryStage = stage;
-        primaryStage.setTitle("Gestion de Projet");
+        primaryStage.setTitle("E-rindra");
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
         showLoginView();
