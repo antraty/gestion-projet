@@ -12,13 +12,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class TacheController {
 
@@ -27,16 +27,21 @@ public class TacheController {
     @FXML private TableColumn<Tache, String> prioriteColumn;
     @FXML private TableColumn<Tache, String> statutColumn;
     @FXML private TableColumn<Tache, LocalDate> echeanceColumn;
+    @FXML private TableColumn<Tache, Void> editColumn; // Nouvelle colonne pour l'édition
+    @FXML private TableColumn<Tache, Void> deleteColumn; // Nouvelle colonne pour la suppression
+    
     @FXML private ComboBox<String> filtreStatutCombo;
     @FXML private ComboBox<Priorite> filtrePrioriteCombo;
     @FXML private DatePicker filtreDatePicker;
 
-    @FXML private TextField titreField;
-    @FXML private TextArea descriptionArea;
-    @FXML private ComboBox<Priorite> prioriteCombo;
-    @FXML private ComboBox<Tache.StatutTache> statutCombo;
-    @FXML private DatePicker dateEcheancePicker;
-    @FXML private ComboBox<Utilisateur> assigneeCombo;
+    // Formulaire d'ajout uniquement
+    @FXML private TextField ajoutTitreField;
+    @FXML private TextArea ajoutDescriptionArea;
+    @FXML private ComboBox<Priorite> ajoutPrioriteCombo;
+    @FXML private ComboBox<Tache.StatutTache> ajoutStatutCombo;
+    @FXML private DatePicker ajoutDateEcheancePicker;
+    @FXML private ComboBox<Utilisateur> ajoutAssigneeCombo;
+    @FXML private Button ajouterButton;
 
     private TacheDAO tacheDAO = new TacheDAO();
     private SousTacheDAO sousTacheDAO = new SousTacheDAO();
@@ -74,19 +79,67 @@ public class TacheController {
                 } else {
                     setText(item);
                     Tache tache = getTableView().getItems().get(getIndex());
-                    switch (tache.getPriorite()) {
-                        case URGENTE:
-                            setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
-                            break;
-                        case HAUTE:
-                            setStyle("-fx-text-fill: orange;");
-                            break;
-                        case MOYENNE:
-                            setStyle("-fx-text-fill: blue;");
-                            break;
-                        default:
-                            setStyle("-fx-text-fill: green;");
+                    if (tache != null) {
+                        switch (tache.getPriorite()) {
+                            case URGENTE:
+                                setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                                break;
+                            case HAUTE:
+                                setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+                                break;
+                            case MOYENNE:
+                                setStyle("-fx-text-fill: blue;");
+                                break;
+                            default:
+                                setStyle("-fx-text-fill: green;");
+                        }
                     }
+                }
+            }
+        });
+
+        // Colonne d'édition avec bouton
+        editColumn.setCellFactory(param -> new TableCell<Tache, Void>() {
+            private final Button editButton = new Button("✏️ Modifier");
+            
+            {
+                editButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+                editButton.setOnAction(event -> {
+                    Tache tache = getTableView().getItems().get(getIndex());
+                    ouvrirFenetreEdition(tache);
+                });
+            }
+            
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(editButton);
+                }
+            }
+        });
+
+        // Colonne de suppression avec bouton
+        deleteColumn.setCellFactory(param -> new TableCell<Tache, Void>() {
+            private final Button deleteButton = new Button("🗑️ Supprimer");
+            
+            {
+                deleteButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+                deleteButton.setOnAction(event -> {
+                    Tache tache = getTableView().getItems().get(getIndex());
+                    supprimerTache(tache);
+                });
+            }
+            
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(deleteButton);
                 }
             }
         });
@@ -104,6 +157,47 @@ public class TacheController {
         });
     }
 
+    private void ouvrirFenetreEdition(Tache tache) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/gestionprojet/views/editerTache.fxml"));
+            Parent root = loader.load();
+            
+            EditerTacheController controller = loader.getController();
+            controller.setTache(tache);
+            controller.setProjet(projetActuel);
+            
+            Stage stage = new Stage();
+            stage.setTitle("Modifier la tâche: " + tache.getTitre());
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+            
+            // Rafraîchir la liste après modification
+            chargerTaches();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir la fenêtre d'édition", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void supprimerTache(Tache tache) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmation");
+        confirmation.setHeaderText("Supprimer la tâche");
+        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer la tâche \"" + tache.getTitre() + "\" ?");
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (tacheDAO.delete(tache.getId())) {
+                chargerTaches();
+                showAlert("Succès", "Tâche supprimée avec succès", Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("Erreur", "Impossible de supprimer la tâche", Alert.AlertType.ERROR);
+            }
+        }
+    }
+
     private void setupComboBoxes() {
         // Filtres
         filtreStatutCombo.setItems(FXCollections.observableArrayList(
@@ -114,17 +208,42 @@ public class TacheController {
         filtrePrioriteCombo.setItems(FXCollections.observableArrayList(Priorite.values()));
         filtrePrioriteCombo.setValue(null);
 
-        // Formulaire
-        prioriteCombo.setItems(FXCollections.observableArrayList(Priorite.values()));
-        prioriteCombo.setValue(Priorite.MOYENNE);
+        // Formulaire d'ajout
+        ajoutPrioriteCombo.setItems(FXCollections.observableArrayList(Priorite.values()));
+        ajoutPrioriteCombo.setValue(Priorite.MOYENNE);
 
-        statutCombo.setItems(FXCollections.observableArrayList(Tache.StatutTache.values()));
-        statutCombo.setValue(Tache.StatutTache.A_FAIRE);
+        ajoutStatutCombo.setItems(FXCollections.observableArrayList(Tache.StatutTache.values()));
+        ajoutStatutCombo.setValue(Tache.StatutTache.A_FAIRE);
     }
 
     private void chargerUtilisateurs() {
         List<Utilisateur> utilisateurs = utilisateurDAO.getAll();
-        assigneeCombo.setItems(FXCollections.observableArrayList(utilisateurs));
+        ajoutAssigneeCombo.setItems(FXCollections.observableArrayList(utilisateurs));
+        
+        // Configuration de l'affichage des utilisateurs
+        ajoutAssigneeCombo.setCellFactory(param -> new ListCell<Utilisateur>() {
+            @Override
+            protected void updateItem(Utilisateur utilisateur, boolean empty) {
+                super.updateItem(utilisateur, empty);
+                if (empty || utilisateur == null) {
+                    setText(null);
+                } else {
+                    setText(utilisateur.getNom());
+                }
+            }
+        });
+        
+        ajoutAssigneeCombo.setButtonCell(new ListCell<Utilisateur>() {
+            @Override
+            protected void updateItem(Utilisateur utilisateur, boolean empty) {
+                super.updateItem(utilisateur, empty);
+                if (empty || utilisateur == null) {
+                    setText(null);
+                } else {
+                    setText(utilisateur.getNom());
+                }
+            }
+        });
     }
 
     private void chargerTaches() {
@@ -176,24 +295,24 @@ public class TacheController {
 
     @FXML
     private void handleAjouterTache() {
-        if (!validateTacheInput()) {
+        if (!validateAjoutTache()) {
             return;
         }
 
         Tache nouvelleTache = new Tache(
-            titreField.getText(),
-            descriptionArea.getText(),
-            dateEcheancePicker.getValue(),
+            ajoutTitreField.getText(),
+            ajoutDescriptionArea.getText(),
+            ajoutDateEcheancePicker.getValue(),
             projetActuel.getId()
         );
-        nouvelleTache.setPriorite(prioriteCombo.getValue());
-        nouvelleTache.setStatut(statutCombo.getValue());
-        if (assigneeCombo.getValue() != null) {
-            nouvelleTache.setAssigneeId(assigneeCombo.getValue().getId());
+        nouvelleTache.setPriorite(ajoutPrioriteCombo.getValue());
+        nouvelleTache.setStatut(ajoutStatutCombo.getValue());
+        if (ajoutAssigneeCombo.getValue() != null) {
+            nouvelleTache.setAssigneeId(ajoutAssigneeCombo.getValue().getId());
         }
 
         if (tacheDAO.creer(nouvelleTache)) {
-            clearForm();
+            clearAjoutForm();
             chargerTaches();
             showAlert("Succès", "Tâche créée avec succès", Alert.AlertType.INFORMATION);
         } else {
@@ -202,88 +321,17 @@ public class TacheController {
     }
 
     @FXML
-    private void handleModifierTache() {
-        Tache tacheSelectionnee = tachesTableView.getSelectionModel().getSelectedItem();
-        if (tacheSelectionnee == null) {
-            showAlert("Sélection", "Veuillez sélectionner une tâche à modifier", Alert.AlertType.WARNING);
-            return;
-        }
-
-        // Remplir le formulaire avec les données de la tâche
-        titreField.setText(tacheSelectionnee.getTitre());
-        descriptionArea.setText(tacheSelectionnee.getDescription());
-        prioriteCombo.setValue(tacheSelectionnee.getPriorite());
-        statutCombo.setValue(tacheSelectionnee.getStatut());
-        dateEcheancePicker.setValue(tacheSelectionnee.getDateEcheance());
-        
-        // Trouver l'utilisateur assigné
-        if (tacheSelectionnee.getAssigneeId() > 0) {
-            Utilisateur assignee = utilisateurDAO.getById(tacheSelectionnee.getAssigneeId());
-            assigneeCombo.setValue(assignee);
-        }
+    private void clearAjoutForm() {
+        ajoutTitreField.clear();
+        ajoutDescriptionArea.clear();
+        ajoutPrioriteCombo.setValue(Priorite.MOYENNE);
+        ajoutStatutCombo.setValue(Tache.StatutTache.A_FAIRE);
+        ajoutDateEcheancePicker.setValue(null);
+        ajoutAssigneeCombo.setValue(null);
     }
 
-    @FXML
-    private void handleSupprimerTache() {
-        Tache tacheSelectionnee = tachesTableView.getSelectionModel().getSelectedItem();
-        if (tacheSelectionnee == null) {
-            showAlert("Sélection", "Veuillez sélectionner une tâche à supprimer", Alert.AlertType.WARNING);
-            return;
-        }
-
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirmation");
-        confirmation.setHeaderText("Supprimer la tâche");
-        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer cette tâche ?");
-
-        if (confirmation.showAndWait().get() == ButtonType.OK) {
-            if (tacheDAO.delete(tacheSelectionnee.getId())) {
-                chargerTaches();
-                showAlert("Succès", "Tâche supprimée avec succès", Alert.AlertType.INFORMATION);
-            } else {
-                showAlert("Erreur", "Impossible de supprimer la tâche", Alert.AlertType.ERROR);
-            }
-        }
-    }
-
-    @FXML
-    private void handleMettreAJour() {
-        Tache tacheSelectionnee = tachesTableView.getSelectionModel().getSelectedItem();
-        if (tacheSelectionnee == null) {
-            showAlert("Erreur", "Aucune tâche sélectionnée", Alert.AlertType.ERROR);
-            return;
-        }
-
-        tacheSelectionnee.setTitre(titreField.getText());
-        tacheSelectionnee.setDescription(descriptionArea.getText());
-        tacheSelectionnee.setPriorite(prioriteCombo.getValue());
-        tacheSelectionnee.setStatut(statutCombo.getValue());
-        tacheSelectionnee.setDateEcheance(dateEcheancePicker.getValue());
-        if (assigneeCombo.getValue() != null) {
-            tacheSelectionnee.setAssigneeId(assigneeCombo.getValue().getId());
-        }
-
-        if (tacheDAO.update(tacheSelectionnee)) {
-            clearForm();
-            chargerTaches();
-            showAlert("Succès", "Tâche mise à jour avec succès", Alert.AlertType.INFORMATION);
-        } else {
-            showAlert("Erreur", "Impossible de mettre à jour la tâche", Alert.AlertType.ERROR);
-        }
-    }
-
-    @FXML
-    private void clearForm() {
-        titreField.clear();
-        descriptionArea.clear();
-        prioriteCombo.setValue(Priorite.MOYENNE);
-        statutCombo.setValue(Tache.StatutTache.A_FAIRE);
-        dateEcheancePicker.setValue(null);
-        assigneeCombo.setValue(null);
-    }
-
-    private boolean validateTacheInput() {
-        if (titreField.getText() == null || titreField.getText().trim().isEmpty()) {
+    private boolean validateAjoutTache() {
+        if (ajoutTitreField.getText() == null || ajoutTitreField.getText().trim().isEmpty()) {
             showAlert("Validation", "Le titre de la tâche est requis", Alert.AlertType.WARNING);
             return false;
         }
@@ -303,6 +351,10 @@ public class TacheController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
+            
+            // Rafraîchir après modification des sous-tâches
+            chargerTaches();
+            
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Erreur", "Impossible d'ouvrir la fenêtre des sous-tâches", Alert.AlertType.ERROR);
@@ -316,5 +368,4 @@ public class TacheController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-    
 }

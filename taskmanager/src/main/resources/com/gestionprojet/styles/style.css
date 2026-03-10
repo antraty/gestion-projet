@@ -136,3 +136,95 @@
     -fx-background-color: #f9f9f9;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 4, 0, 0, 1);
 }
+
+/* Nouveaux styles pour améliorer l'affichage */
+.root {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #ddd;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-cell-size: 35px;
+    -fx-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f9f9f9;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e3f2fd;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.list-cell {
+    -fx-padding: 8px;
+    -fx-border-color: transparent;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #e3f2fd;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+.titled-pane {
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #f5f5f5;
+    -fx-background-radius: 5 5 0 0;
+    -fx-font-weight: bold;
+}
+
+.titled-pane > .content {
+    -fx-border-color: transparent;
+    -fx-background-color: white;
+}
+
+.badge {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10;
+    -fx-font-size: 12px;
+}
+
+/* Responsive design pour les petits écrans */
+@media (max-width: 800px) {
+    .table-view .table-column {
+        -fx-pref-width: auto;
+    }
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.gestionprojet.controllers.EditerTacheController"
+            stylesheets="@../styles/style.css"
+            prefWidth="500" prefHeight="550"
+            maxWidth="500" maxHeight="550"
+            minWidth="500" minHeight="550">
+    
+    <center>
+        <VBox spacing="20" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <Label fx:id="titreFenetreLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" wrapText="true" alignment="CENTER"/>
+            
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100" prefWidth="100" maxWidth="100"/>
+                    <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
+                </columnConstraints>
+                
+                <!-- Ligne 0: Titre -->
+                <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="titreField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                
+                <!-- Ligne 1: Description -->
+                <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;" 
+                       alignment="TOP_LEFT"/>
+                <TextArea fx:id="descriptionArea" prefRowCount="4" wrapText="true" 
+                         GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                
+                <!-- Ligne 2: Priorité -->
+                <Label text="Priorité:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="prioriteCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" 
+                         prefWidth="200" maxWidth="200"/>
+                
+                <!-- Ligne 3: Statut -->
+                <Label text="Statut:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="statutCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" 
+                         prefWidth="200" maxWidth="200"/>
+                
+                <!-- Ligne 4: Date échéance -->
+                <Label text="Date échéance:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <DatePicker fx:id="dateEcheancePicker" GridPane.rowIndex="4" GridPane.columnIndex="1" 
+                           prefWidth="200" maxWidth="200"/>
+                
+                <!-- Ligne 5: Assigner à -->
+                <Label text="Assigner à:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="assigneeCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" 
+                         prefWidth="200" maxWidth="200"/>
+            </GridPane>
+            
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="sauvegarderButton" text="Sauvegarder" onAction="#handleSauvegarder" 
+                       styleClass="primary-button" prefWidth="120"/>
+                <Button fx:id="annulerButton" text="Annuler" onAction="#handleAnnuler" 
+                       prefWidth="120"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

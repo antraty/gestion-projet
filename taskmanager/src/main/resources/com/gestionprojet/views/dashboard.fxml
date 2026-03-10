@@ -6,7 +6,8 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" 
             fx:controller="com.gestionprojet.controllers.DashboardController"
-            stylesheets="@../styles/style.css">
+            stylesheets="@../styles/style.css"
+            prefHeight="700" prefWidth="1000">
     
     <top>
         <VBox styleClass="header">
@@ -36,52 +37,63 @@
     </top>
     
     <center>
-        <TabPane>
-            <Tab text="Tableau de bord" closable="false">
-                <VBox spacing="20">
-                    <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
-                    </padding>
-                    
-                    <Label text="Mes projets" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
-                    <ListView fx:id="projetsListView" onMouseClicked="#handleProjetSelectionne"/>
-                    
-                    <HBox spacing="20">
-                        <VBox spacing="10" HBox.hgrow="ALWAYS">
-                            <Label text="À faire aujourd'hui" style="-fx-font-weight: bold;"/>
-                            <ListView fx:id="tachesAujourdhuiListView"/>
+        <TabPane tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Tableau de bord">
+                <ScrollPane fitToWidth="true" fitToHeight="true">
+                    <content>
+                        <VBox spacing="20">
+                            <padding>
+                                <Insets top="20" right="20" bottom="20" left="20"/>
+                            </padding>
+                            
+                            <Label text="Mes projets" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                            <ListView fx:id="projetsListView" onMouseClicked="#handleProjetSelectionne" prefHeight="150"/>
+                            
+                            <HBox spacing="20" HBox.hgrow="ALWAYS">
+                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                    <Label text="À faire aujourd'hui" style="-fx-font-weight: bold;"/>
+                                    <ListView fx:id="tachesAujourdhuiListView" prefHeight="200"/>
+                                </VBox>
+                                
+                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                    <Label text="Cette semaine" style="-fx-font-weight: bold;"/>
+                                    <ListView fx:id="tachesSemaineListView" prefHeight="200"/>
+                                </VBox>
+                                
+                                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                    <Label text="Plus tard" style="-fx-font-weight: bold;"/>
+                                    <ListView fx:id="tachesPlusTardListView" prefHeight="200"/>
+                                </VBox>
+                            </HBox>
                         </VBox>
-                        
-                        <VBox spacing="10" HBox.hgrow="ALWAYS">
-                            <Label text="Cette semaine" style="-fx-font-weight: bold;"/>
-                            <ListView fx:id="tachesSemaineListView"/>
-                        </VBox>
-                        
-                        <VBox spacing="10" HBox.hgrow="ALWAYS">
-                            <Label text="Plus tard" style="-fx-font-weight: bold;"/>
-                            <ListView fx:id="tachesPlusTardListView"/>
-                        </VBox>
-                    </HBox>
-                </VBox>
+                    </content>
+                </ScrollPane>
             </Tab>
             
-            <Tab text="Toutes les tâches" closable="false">
-                <VBox spacing="20">
+            <Tab text="Toutes les tâches">
+                <VBox spacing="20" VBox.vgrow="ALWAYS">
                     <padding>
                         <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
 
                     <Label text="Toutes les tâches assignées à moi" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
                     
-                    <TableView fx:id="toutesTachesTableView" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn text="Titre" fx:id="titreColumnToutesTaches" prefWidth="150"/>
-                            <TableColumn text="Projet" fx:id="projetColumnToutesTaches" prefWidth="150"/>
-                            <TableColumn text="Priorité" fx:id="prioriteColumnToutesTaches" prefWidth="100"/>
-                            <TableColumn text="Statut" fx:id="statutColumnToutesTaches" prefWidth="100"/>
-                            <TableColumn text="Échéance" fx:id="echeanceColumnToutesTaches" prefWidth="100"/>
-                        </columns>
-                    </TableView>
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                        <content>
+                            <TableView fx:id="toutesTachesTableView" prefHeight="400">
+                                <columns>
+                                    <TableColumn text="Titre" fx:id="titreColumnToutesTaches" prefWidth="180"/>
+                                    <TableColumn text="Projet" fx:id="projetColumnToutesTaches" prefWidth="150"/>
+                                    <TableColumn text="Priorité" fx:id="prioriteColumnToutesTaches" prefWidth="100"/>
+                                    <TableColumn text="Statut" fx:id="statutColumnToutesTaches" prefWidth="100"/>
+                                    <TableColumn text="Échéance" fx:id="echeanceColumnToutesTaches" prefWidth="100"/>
+                                </columns>
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                </columnResizePolicy>
+                            </TableView>
+                        </content>
+                    </ScrollPane>
                 </VBox>
             </Tab>
         </TabPane>

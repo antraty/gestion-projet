@@ -6,10 +6,11 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" 
             fx:controller="com.gestionprojet.controllers.TacheController"
-            stylesheets="@../styles/style.css">
+            stylesheets="@../styles/style.css"
+            prefHeight="600" prefWidth="900">
     
     <left>
-        <VBox spacing="20" styleClass="sidebar">
+        <VBox spacing="20" styleClass="sidebar" prefWidth="200" maxWidth="200">
             <padding>
                 <Insets top="20" right="10" bottom="20" left="10"/>
             </padding>
@@ -17,67 +18,85 @@
             <Label text="Filtres" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
             
             <Label text="Statut:"/>
-            <ComboBox fx:id="filtreStatutCombo" onAction="#appliquerFiltres"/>
+            <ComboBox fx:id="filtreStatutCombo" onAction="#appliquerFiltres" prefWidth="180"/>
             
             <Label text="Priorité:"/>
-            <ComboBox fx:id="filtrePrioriteCombo" onAction="#appliquerFiltres"/>
+            <ComboBox fx:id="filtrePrioriteCombo" onAction="#appliquerFiltres" prefWidth="180"/>
             
             <Label text="Date échéance:"/>
-            <DatePicker fx:id="filtreDatePicker" onAction="#appliquerFiltres"/>
+            <DatePicker fx:id="filtreDatePicker" onAction="#appliquerFiltres" prefWidth="180"/>
             
             <Button text="Réinitialiser" onAction="#reinitialiserFiltres" maxWidth="Infinity"/>
         </VBox>
     </left>
     
     <center>
-        <VBox spacing="20">
+        <VBox spacing="20" VBox.vgrow="ALWAYS">
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
             
-            <TableView fx:id="tachesTableView" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="titreColumn" text="Titre" prefWidth="200"/>
-                    <TableColumn fx:id="prioriteColumn" text="Priorité" prefWidth="100"/>
-                    <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
-                    <TableColumn fx:id="echeanceColumn" text="Échéance" prefWidth="100"/>
-                </columns>
-            </TableView>
+            <!-- Zone du tableau avec ScrollPane pour gérer les longues listes -->
+            <VBox VBox.vgrow="ALWAYS" spacing="10">
+                <Label text="Liste des tâches" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                    <content>
+                        <TableView fx:id="tachesTableView" prefHeight="300">
+                            <columns>
+                                <TableColumn fx:id="titreColumn" text="Titre" prefWidth="180"/>
+                                <TableColumn fx:id="prioriteColumn" text="Priorité" prefWidth="100"/>
+                                <TableColumn fx:id="statutColumn" text="Statut" prefWidth="100"/>
+                                <TableColumn fx:id="echeanceColumn" text="Échéance" prefWidth="100"/>
+                                <TableColumn fx:id="editColumn" text="Modifier" prefWidth="90"/>
+                                <TableColumn fx:id="deleteColumn" text="Supprimer" prefWidth="90"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                    </content>
+                </ScrollPane>
+            </VBox>
             
-            <TitledPane text="Nouvelle tâche" expanded="false">
-                <VBox spacing="10">
-                    <GridPane hgap="10" vgap="10">
-                        <columnConstraints>
-                            <ColumnConstraints minWidth="100"/>
-                            <ColumnConstraints hgrow="ALWAYS"/>
-                        </columnConstraints>
-                        
-                        <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                        <TextField fx:id="titreField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-                        
-                        <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                        <TextArea fx:id="descriptionArea" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-                        
-                        <Label text="Priorité:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="prioriteCombo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-                        
-                        <Label text="Statut:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="statutCombo" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-                        
-                        <Label text="Date échéance:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                        <DatePicker fx:id="dateEcheancePicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-                        
-                        <Label text="Assigner à:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                        <ComboBox fx:id="assigneeCombo" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
-                    </GridPane>
-                    
-                    <HBox spacing="10" alignment="CENTER_RIGHT">
-                        <Button text="Ajouter" onAction="#handleAjouterTache" styleClass="primary-button"/>
-                        <Button text="Mettre à jour" onAction="#handleMettreAJour"/>
-                        <Button text="Supprimer" onAction="#handleSupprimerTache" styleClass="danger-button"/>
-                        <Button text="Effacer" onAction="#clearForm"/>
-                    </HBox>
-                </VBox>
+            <!-- Zone d'ajout avec ScrollPane si nécessaire -->
+            <TitledPane text="Ajouter une nouvelle tâche" expanded="false" maxHeight="300">
+                <content>
+                    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent;">
+                        <content>
+                            <VBox spacing="10">
+                                <GridPane hgap="10" vgap="10">
+                                    <columnConstraints>
+                                        <ColumnConstraints minWidth="100" percentWidth="20"/>
+                                        <ColumnConstraints hgrow="ALWAYS" percentWidth="80"/>
+                                    </columnConstraints>
+                                    
+                                    <Label text="Titre:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                    <TextField fx:id="ajoutTitreField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                                    
+                                    <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                    <TextArea fx:id="ajoutDescriptionArea" prefRowCount="3" wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                                    
+                                    <Label text="Priorité:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                    <ComboBox fx:id="ajoutPrioriteCombo" GridPane.rowIndex="2" GridPane.columnIndex="1" maxWidth="200"/>
+                                    
+                                    <Label text="Statut:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                    <ComboBox fx:id="ajoutStatutCombo" GridPane.rowIndex="3" GridPane.columnIndex="1" maxWidth="200"/>
+                                    
+                                    <Label text="Date échéance:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                    <DatePicker fx:id="ajoutDateEcheancePicker" GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="200"/>
+                                    
+                                    <Label text="Assigner à:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                                    <ComboBox fx:id="ajoutAssigneeCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" maxWidth="200"/>
+                                </GridPane>
+                                
+                                <HBox spacing="10" alignment="CENTER_RIGHT">
+                                    <Button text="Ajouter" onAction="#handleAjouterTache" styleClass="primary-button"/>
+                                    <Button text="Effacer" onAction="#clearAjoutForm"/>
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </ScrollPane>
+                </content>
             </TitledPane>
         </VBox>
     </center>
