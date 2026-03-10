@@ -4,6 +4,7 @@ import com.gestionprojet.GestionProjetApp;
 import com.gestionprojet.dao.UtilisateurDAO;
 import com.gestionprojet.models.Utilisateur;
 import com.gestionprojet.utils.SessionManager;
+import com.gestionprojet.utils.PasswordUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -85,8 +86,11 @@ public class LoginController {
             showMessage("Les mots de passe ne correspondent pas", Alert.AlertType.ERROR);
             return;
         }
+         
+        String hashedPassword = PasswordUtils.hashPassword(password);
+        Utilisateur utilisateur = new Utilisateur(nom, email, hashedPassword);
 
-        Utilisateur utilisateur = new Utilisateur(nom, email, password);
+
         if (utilisateurDAO.inscrire(utilisateur)) {
             showMessage("Inscription réussie ! Vous pouvez maintenant vous connecter.", Alert.AlertType.INFORMATION);
             showLoginForm();
@@ -101,4 +105,6 @@ public class LoginController {
                               type == Alert.AlertType.WARNING ? "-fx-text-fill: orange;" : 
                               "-fx-text-fill: green;");
     }
+
+
 }

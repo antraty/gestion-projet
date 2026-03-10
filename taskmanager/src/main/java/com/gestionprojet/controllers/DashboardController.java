@@ -33,7 +33,7 @@ public class DashboardController {
     @FXML private Label projetCountLabel;
     @FXML private Label tacheCountLabel;
 
-    // TableView et colonnes pour l'onglet "Toutes les tâches"
+
     @FXML private TableView<Tache> toutesTachesTableView;
     @FXML private TableColumn<Tache, String> titreColumnToutesTaches;
     @FXML private TableColumn<Tache, String> prioriteColumnToutesTaches;
@@ -48,7 +48,7 @@ public class DashboardController {
         if (SessionManager.getInstance().estConnecte()) {
             welcomeLabel.setText("Bienvenue, " + SessionManager.getInstance().getUtilisateurConnecte().getNom());
             chargerDonnees();
-            chargerToutesLesTachesAttribuees(); // Charger les tâches attribuées pour l'onglet "Toutes les tâches"
+            chargerToutesLesTachesAttribuees();
         }
     }
 
